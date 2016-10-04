@@ -11,3 +11,12 @@ module "consul" {
   region = "${var.region}"
   servers = "3"
 }
+
+resource "aws_instance" "app_server" {
+  ami = "${lookup(var.amis, var.region)}"
+  instance_type = "t2.micro"
+  tags {
+    Name = "HelloWorld"    
+  }  
+  
+}
