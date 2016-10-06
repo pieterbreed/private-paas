@@ -26,6 +26,9 @@ mkdir -p /etc/nomad
 
 rm "$nomad_file_name"
 
+# terraform created a config file for us using templates
+# this step will just move it into place
+mv client.hcl /etc/nomad
 
 cat > nomad.service <<'EOF'
 [Unit]
