@@ -14,3 +14,7 @@ variable "amis" {
     us-west-2 = "ami-06b94666"
   }
 }
+
+variable ssh_username {
+  default = "ubuntu"
+}

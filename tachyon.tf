@@ -4,34 +4,61 @@ provider "aws" {
   region     = "${var.region}"
 }
 
-module "consul" {
-  source = "git::https://github.com/hashicorp/consul//terraform/aws?ref=v0.7.0"
-  key_name = "${var.key_name}"
-  key_path = "${var.key_path}"
-  region = "${var.region}"
-  servers = "3"
-}
-
-resource "aws_instance" "app_server" {
+resource "aws_instance" "cluster_master_node" {
   ami = "${lookup(var.amis, var.region)}"
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   key_name = "${var.key_name}"
-  security_groups = ["${aws_security_group.consul.name}"]  
+  security_groups = ["${aws_security_group.consul.name}"]
+  
+  count = 3
+
+  connection {
+    user = "${var.ssh_username}"
+    private_key = "${file("${var.key_path}")}"
+  }  
+  
   tags {
-    Name = "HelloWorld"    
+    Name = "Cluster Master Node - ${count.index}"
+  }
+  
+  provisioner "file" {
+    source = "server-install.sh"
+    destination = "/tmp/server-install.sh"
   }
 
   provisioner "remote-exec" {
-    connection = {
-      type = "ssh"
-      user = "ubuntu"
-      private_key = "${file(var.key_path)}"      
-    }    
-  }  
+    inline = [
+      "sudo chmod +x /tmp/server-install.sh",
+      "sudo /tmp/server-install.sh"      
+    ]
+  }
+}
+
+resource "null_resource" "wire_master_cluster" {
+  # Changes to any instance of the cluster requires re-provisioning
+  triggers {
+    cluster_instance_ids = "${join(",", aws_instance.cluster_master_node.*.id)}"
+  }
+
+  # Bootstrap script can run on any instance of the cluster
+  # So we just choose the first in this case
+  connection {
+    host = "${element(aws_instance.cluster_master_node.*.public_ip, 0)}"
+    user = "${var.ssh_username}"
+    private_key = "${file("${var.key_path}")}"
+  }
+
+  provisioner "remote-exec" {
+    # Bootstrap script called with private_ip of each node in the clutser
+    inline = [
+      "consul join ${join(" ", aws_instance.cluster_master_node.*.private_dns)}"      
+      
+    ]
+  }
 }
 
 resource "aws_security_group" "consul" {
-  name = "consul_app_servers"
+  name = "Hashistack"
   description = "Consul internal traffic + maintenance."
 
   // These are for internal traffic
