@@ -18,3 +18,17 @@ variable "amis" {
 variable ssh_username {
   default = "ubuntu"
 }
+
+variable master_nodes_count {
+  default = 2
+}
+variable master_instance_type {
+  default = "t2.micro"
+}
+
+variable worker_nodes_count {
+  default = 2
+}
+variable worker_instance_type {
+  default = "t2.micro"
+}

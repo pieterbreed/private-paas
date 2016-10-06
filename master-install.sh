@@ -14,15 +14,18 @@ apt-get install -y unzip dnsmasq
 # ----------------------------------------
 ## Setup nomad
 
-dl https://releases.hashicorp.com/nomad/0.4.1/nomad_0.4.1_linux_amd64.zip
+nomad_url="https://releases.hashicorp.com/nomad/0.4.1/nomad_0.4.1_linux_amd64.zip"
+nomad_file_name=`basename $nomad_url`
 
-unzip nomad_0.4.1_linux_amd64.zip
+dl "$nomad_url"
+
+unzip "$nomad_file_name"
 mv nomad /usr/local/bin/
 
 mkdir -p /var/lib/nomad
 mkdir -p /etc/nomad
 
-rm nomad_0.4.1_linux_amd64.zip
+rm "$nomad_file_name"
 
 cat > server.hcl <<EOF
 addresses {
@@ -69,12 +72,15 @@ systemctl start nomad
 # ----------------------------------------
 ## Setup consul
 
+consul_url="https://releases.hashicorp.com/consul/0.7.0/consul_0.7.0_linux_amd64.zip"
+consul_file_name=`basename $consul_url`
+
 mkdir -p /var/lib/consul
 
-dl https://releases.hashicorp.com/consul/0.7.0/consul_0.7.0_linux_amd64.zip
-unzip consul_0.7.0_linux_amd64.zip
+dl "$consul_url"
+unzip "$consul_file_name"
 mv consul /usr/local/bin/consul
-rm consul_0.7.0_linux_amd64.zip
+rm "$consul_file_name"
 
 cat > consul.service <<'EOF'
 [Unit]
@@ -106,10 +112,13 @@ systemctl start consul
 # ----------------------------------------
 ## Setup Vault
 
-dl https://releases.hashicorp.com/vault/0.6.1/vault_0.6.1_linux_amd64.zip 
-unzip vault_0.6.1_linux_amd64.zip
+vault_url="https://releases.hashicorp.com/vault/0.6.2/vault_0.6.2_linux_amd64.zip"
+vault_file_name=`basename $vault_url`
+
+dl "$vault_url"
+unzip "$vault_file_name"
 mv vault /usr/local/bin/vault
-rm vault_0.6.1_linux_amd64.zip
+rm "$vault_file_name"
 
 mkdir -p /etc/vault
 
