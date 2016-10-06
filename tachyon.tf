@@ -51,8 +51,8 @@ resource "null_resource" "wire_master_cluster" {
   provisioner "remote-exec" {
     # Bootstrap script called with private_ip of each node in the clutser
     inline = [
-      "consul join ${join(" ", aws_instance.cluster_master_node.*.private_dns)}"      
-      
+      "consul join ${join(" ", aws_instance.cluster_master_node.*.private_dns)}",
+      "nomad server-join ${join(" ", aws_instance.cluster_master_node.*.private_dns)}"
     ]
   }
 }
