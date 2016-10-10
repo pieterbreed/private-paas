@@ -13,13 +13,17 @@
     - name: Download and install hashicorp tools
       become: true
       unarchive:
-        src: "{{ item }}"
-        dest: "/usr/local/bin"
+        src: "{{ item.url }}"
+        dest: "{{ item.creates }}"
+        creates: "{{ item.creates }}"
         copy: no
       with_items:
-        - "https://releases.hashicorp.com/nomad/0.4.1/nomad_0.4.1_linux_amd64.zip"
-        - "https://releases.hashicorp.com/consul/0.7.0/consul_0.7.0_linux_amd64.zip"
-        - "https://releases.hashicorp.com/vault/0.6.2/vault_0.6.2_linux_amd64.zip"
+        - url: "https://releases.hashicorp.com/nomad/0.4.1/nomad_0.4.1_linux_amd64.zip"
+          creates: "/usr/local/bin/nomad"
+        - url: "https://releases.hashicorp.com/consul/0.7.0/consul_0.7.0_linux_amd64.zip"
+          creates: "/usr/local/bin/consul"
+        - url: "https://releases.hashicorp.com/vault/0.6.2/vault_0.6.2_linux_amd64.zip"
+          creates: "/usr/local/bin/vault"
 
     - name: Creating folders
       become: true
@@ -31,12 +35,58 @@
         - "/etc/nomad"
         - "/var/lib/consul"
         - "/etc/vault"
+        - "/etc/dnsmasq.d"
 
     - name: Nomad config
       become: true
       template:
         src: "nomad_server.hcl.j2"
         dest: "/etc/nomad/server.hcl"
-          
+
+    - name: Nomad Systemd
+      become: true
+      template:
+        src: "nomad_systemd.service.j2"
+        dest: "/etc/systemd/system/nomad.service"
+
+    - name: Consul Systemd
+      become: true
+      template:
+        src: "consul_systemd.service.j2"
+        dest: "/etc/systemd/system/consul.service"
+
+    - name: Vault config
+      become: true
+      template:
+        src: "vault_server.hcl.j2"
+        dest: "/etc/vault/vault.hcl"
+
+    - name: Vault Systemd
+      become: true
+      template:
+        src: "vault_systemd.service.j2"
+        dest: "/etc/systemd/system/vault.service"
+
+    - name: dnsmasq config
+      become: true
+      template:
+        src: "dnsmasq_config.j2"
+        dest: "/etc/dnsmasq.d/10-consul"
+
+    - name: reload systemd
+      become: true
+      shell: "systemctl daemon-reload"
+
+    - name: Restart all the new services
+      become: true
+      service:
+        state: restarted
+        enabled: yes
+        name: "{{ item }}"
+      with_items:
+        - "nomad"
+        - "vault"
+        - "consul"
+        - "dnsmasq"
 
         
