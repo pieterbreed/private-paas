@@ -1,0 +1,19 @@
+addresses {
+    rpc  = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}"
+    serf = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}"
+}
+
+advertise {
+    http = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}:4646"
+    rpc  = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}:4647"
+    serf = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}:4648"
+}
+
+bind_addr = "0.0.0.0"
+data_dir  = "/var/lib/nomad"
+log_level = "DEBUG"
+
+server {
+    enabled = true
+    bootstrap_expect = 3
+}

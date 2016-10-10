@@ -1,0 +1,42 @@
+---
+- hosts: master-nodes
+  tasks:
+    - name: Install base packages
+      become: true
+      apt:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - 'dnsmasq'
+        - 'unzip'
+
+    - name: Download and install hashicorp tools
+      become: true
+      unarchive:
+        src: "{{ item }}"
+        dest: "/usr/local/bin"
+        copy: no
+      with_items:
+        - "https://releases.hashicorp.com/nomad/0.4.1/nomad_0.4.1_linux_amd64.zip"
+        - "https://releases.hashicorp.com/consul/0.7.0/consul_0.7.0_linux_amd64.zip"
+        - "https://releases.hashicorp.com/vault/0.6.2/vault_0.6.2_linux_amd64.zip"
+
+    - name: Creating folders
+      become: true
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - "/var/lib/nomad"
+        - "/etc/nomad"
+        - "/var/lib/consul"
+        - "/etc/vault"
+
+    - name: Nomad config
+      become: true
+      template:
+        src: "nomad_server.hcl.j2"
+        dest: "/etc/nomad/server.hcl"
+          
+
+        

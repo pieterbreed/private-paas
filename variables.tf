@@ -20,14 +20,14 @@ variable ssh_username {
 }
 
 variable master_nodes_count {
-  default = 3
+  default = 1
 }
 variable master_instance_type {
   default = "t2.micro"
 }
 
 variable worker_nodes_count {
-  default = 5
+  default = 1
 }
 variable worker_instance_type {
   default = "t2.micro"

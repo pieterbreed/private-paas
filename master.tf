@@ -14,39 +14,48 @@ resource "aws_instance" "cluster_master_node" {
   tags {
     Name = "Cluster Master Node - ${count.index + 1} / ${var.master_nodes_count}"
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt-get upgrade -y",
+      "sudo apt-get install -y python",
+      "sudo reboot"
+    ]    
+  }  
   
-  provisioner "file" {
-    source = "master-install.sh"
-    destination = "/tmp/master-install.sh"
-  }
+  # provisioner "file" {
+  #   source = "master-install.sh"
+  #   destination = "/tmp/master-install.sh"
+  # }
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo chmod +x /tmp/master-install.sh",
-      "sudo /tmp/master-install.sh"      
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "sudo chmod +x /tmp/master-install.sh",
+  #     "sudo /tmp/master-install.sh"      
+  #   ]
+  # }
 }
 
-resource "null_resource" "wire_master_cluster" {
-  # Changes to any instance of the cluster requires re-provisioning
-  triggers {
-    cluster_instance_ids = "${join(",", aws_instance.cluster_master_node.*.id)}"
-  }
+# resource "null_resource" "wire_master_cluster" {
+#   # Changes to any instance of the cluster requires re-provisioning
+#   triggers {
+#     cluster_instance_ids = "${join(",", aws_instance.cluster_master_node.*.id)}"
+#   }
 
-  # Bootstrap script can run on any instance of the cluster
-  # So we just choose the first in this case
-  connection {
-    host = "${element(aws_instance.cluster_master_node.*.public_ip, 0)}"
-    user = "${var.ssh_username}"
-    private_key = "${file("${var.key_path}")}"
-  }
+#   # Bootstrap script can run on any instance of the cluster
+#   # So we just choose the first in this case
+#   connection {
+#     host = "${element(aws_instance.cluster_master_node.*.public_ip, 0)}"
+#     user = "${var.ssh_username}"
+#     private_key = "${file("${var.key_path}")}"
+#   }
 
-  provisioner "remote-exec" {
-    # Bootstrap script called with private_ip of each node in the clutser
-    inline = [
-      "consul join ${join(" ", aws_instance.cluster_master_node.*.private_dns)}",
-      "nomad server-join ${join(" ", aws_instance.cluster_master_node.*.private_dns)}"
-    ]
-  }
-}
+#   provisioner "remote-exec" {
+#     # Bootstrap script called with private_ip of each node in the clutser
+#     inline = [
+#       "consul join ${join(" ", aws_instance.cluster_master_node.*.private_dns)}",
+#       "nomad server-join ${join(" ", aws_instance.cluster_master_node.*.private_dns)}"
+#     ]
+#   }
+# }
