@@ -33,7 +33,6 @@ resource "null_resource" "cluster_worker_nomad_config" {
 
   # Changes to id of worker node requires re-provisioning
   triggers {
-    cluster_instance_ids = "${element(aws_instance.cluster_worker_node.*.id, count.index)}"
     template_content = "${element(data.template_file.cluster_worker_node_nomad_config.*.rendered, count.index)}"
   }
   
@@ -58,7 +57,8 @@ resource "null_resource" "cluster_worker_nomad_config" {
   provisioner "remote-exec" {
     inline = [
       "sudo chmod +x /tmp/worker-install.sh",
-      "sudo /tmp/worker-install.sh"      
+      "sudo /tmp/worker-install.sh",
+      "sudo systemctl restart nomad"      
     ]
   }
 

@@ -27,7 +27,7 @@ variable master_instance_type {
 }
 
 variable worker_nodes_count {
-  default = 1
+  default = 5
 }
 variable worker_instance_type {
   default = "t2.micro"

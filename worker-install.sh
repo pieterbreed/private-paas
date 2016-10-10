@@ -9,6 +9,7 @@ function dl {
 }
 
 apt-get update
+apt-get upgrade -y
 apt-get install -y unzip dnsmasq
 
 # ----------------------------------------
@@ -58,3 +59,5 @@ EOF
 
 systemctl enable dnsmasq
 systemctl start dnsmasq
+
+reboot
