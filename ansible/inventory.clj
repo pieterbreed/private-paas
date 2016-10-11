@@ -44,9 +44,13 @@
 
 (as-> yinv/empty-inventory $
 
-  (yinv/add-group $ "worker-nodes" {"master_nodes" master-nodes-pvt})
+  ;; this makes the INTERNAL DNS names of the master
+  ;; nodes available to the worker nodes
+  ;; this will be used when the nomad config is being set up
+  ;; so the nomad workers knows who their masters are
+  (yinv/add-group $ "worker-nodes" {"master_nodes_internal_dns" master-nodes-pvt})
 
-  ;; add details for master nodes
+  ;; add master nodes
   (->> (for [x master-nodes]
          {:host ["ubuntu" x 22]
           :vars {"ansible_user" "ubuntu"
@@ -59,7 +63,7 @@
                                                "master-nodes")))
                $))
 
-  ;; add details to worker nodes
+  ;; add worker nodes
   (->> (for [x worker-nodes]
          {:host ["ubuntu" x 22]
           :vars {"ansible_user" "ubuntu"

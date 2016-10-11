@@ -14,9 +14,9 @@ log_level = "DEBUG"
 client {
     enabled = true
     servers = [
-{% for host in groups['master-nodes'] %}
-    {{ host }}
-{% endfor %}
+
+{{ master_nodes_internal_dns | join(",") }}
+
     ]
     options {
         "driver.raw_exec.enable" = "1"
