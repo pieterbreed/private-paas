@@ -1,0 +1,24 @@
+addresses {
+    rpc  = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}
+    http = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}"
+}
+
+advertise {
+    http = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}:4646"
+    rpc  = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}:4647"
+}
+
+data_dir  = "/var/lib/nomad"
+log_level = "DEBUG"
+
+client {
+    enabled = true
+    servers = [
+{% for host in groups['master-nodes'] %}
+    {{ host }}
+{% endfor %}
+    ]
+    options {
+        "driver.raw_exec.enable" = "1"
+    }
+}
