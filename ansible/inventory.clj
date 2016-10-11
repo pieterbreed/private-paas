@@ -32,14 +32,19 @@
                                       keyword
                                       wharf/underscore->hyphen))))
 
-(def worker-nodes (-> data :worker-nodes-public :value))
-(def master-nodes (-> data :master-nodes-public :value))
+(letfn [(get [k]
+          (-> data k :value))]
+  (def worker-nodes (get :worker-nodes-public))
+  (def master-nodes (get :master-nodes-public))
+  (def master-nodes-pvt (get :master-nodes-private)))
 
 ;; ----------------------------------------
 
 
 
 (as-> yinv/empty-inventory $
+
+  (yinv/add-group $ "worker-nodes" {"master_nodes" master-nodes-pvt})
 
   ;; add details for master nodes
   (->> (for [x master-nodes]
