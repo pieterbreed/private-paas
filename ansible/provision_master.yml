@@ -40,7 +40,7 @@
     - name: Nomad config
       become: true
       template:
-        src: "nomad_server.hcl.j2"
+        src: "nomad_master.hcl.j2"
         dest: "/etc/nomad/server.hcl"
 
     - name: Nomad Systemd

@@ -1,5 +1,5 @@
 addresses {
-    rpc  = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}
+    rpc  = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}"
     http = "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}"
 }
 
@@ -13,11 +13,7 @@ log_level = "DEBUG"
 
 client {
     enabled = true
-    servers = [
-
-{{ master_nodes_internal_dns | join(",") }}
-
-    ]
+    servers = ["{{ master_nodes_internal_dns | join("\", \"") }}"]
     options {
         "driver.raw_exec.enable" = "1"
     }
