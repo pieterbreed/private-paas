@@ -20,13 +20,31 @@
 
 (if (nil? terraform-folder)
   (do
-    (println "Specify the terraform-path env variable")
+    (println "Specify the TERRAFORM_PATH env variable")
     (System/exit 1)))
+
+(let [tf (clojure.java.io/file terraform-folder)]
+  (if (not (.exists tf))
+    (do
+      (println (str "'" terraform-folder "' does not exist."))
+      (System/exit 1))))
 
 ;; ----------------------------------------
 
-(def data (->> (conch/with-programs [terraform]
-                 (terraform "output" "-json" {:dir terraform-folder}))
+(def terraform-output
+  (try
+    (conch/with-programs [terraform]
+      (terraform "output" "-json" {:dir terraform-folder}))
+    (catch Exception e
+      (do 
+        (println (str "terraform has no output: "
+                      (->> (ex-data e)
+                           :proc
+                           :err
+                           (reduce str))))
+        (System/exit 1)))))
+
+(def data (->> terraform-output
                json/read-str
                (wharf/transform-keys (comp
                                       keyword

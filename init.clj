@@ -114,7 +114,11 @@
                                          "-c" "paramiko"
                                          {:seq true
                                           :throw false
-                                          :verbose true})]
+                                          :verbose true
+                                          :env {"TERRAFORM_PATH" (.getCanonicalPath
+                                                                  (clojure.java.io/file work-dir
+                                                                                        "terraform"))}
+                                          })]
       (diag-lines (-> ansible-proc :proc :out))
       (diag-lines (-> ansible-proc :proc :err))
       (if (not (=! 0 (-> ansible-proc :exit-code deref)
