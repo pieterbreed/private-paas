@@ -97,30 +97,6 @@
 
 
   
-  ;; (yinv/add-target $ vagrant-host {"ansible_user" "vagrant"
-  ;;                                  "ansible_host" (env/env :houstan-hostname)})
-  ;; (yinv/add-target-to-group $ vagrant-host "vagrant-hosts")
-  ;; (yinv/add-target-to-group $ vagrant-host "java-machines")
   (yinv/make-ansible-list $)
   (json/write-str $)
   (println $))
-
-
-;; (as-> yinv/empty-inventory $
-;;   (->> (for [mstr (-> data :master-nodes-public :value)]
-;;          {:host ["ubuntu" mstr 22]
-;;           :vars {"ansible_user" "ubuntu"
-;;                  "ansible_host" mstr}})
-;;        (reduce (fn [acc x]
-;;                  (yinv/add-target acc
-;;                                   (:host x)
-;;                                   (:vars x)))
-;;                $))
-;;   ;; (yinv/add-target $ vagrant-host {"ansible_user" "vagrant"
-;;   ;;                                  "ansible_host" (env/env :houstan-hostname)})
-;;   ;; (yinv/add-target-to-group $ vagrant-host "vagrant-hosts")
-;;   ;; (yinv/add-target-to-group $ vagrant-host "java-machines")
-;;   (yinv/make-ansible-list $)
-;;   (json/write-str $)
-;;   (println $))
-
