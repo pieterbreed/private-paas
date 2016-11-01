@@ -16,4 +16,7 @@ log_level = "DEBUG"
 server {
     enabled = true
     bootstrap_expect = 3
+    rejoin_after_leave = true
+    retry_join = ["{{ master_nodes_internal_dns | join("\", \"") }}"]
+
 }

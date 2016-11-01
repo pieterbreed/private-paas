@@ -17,6 +17,7 @@ resource "aws_instance" "cluster_worker_node" {
   
   provisioner "remote-exec" {
     inline = [
+      "sudo apt-get install language-pack-UTF-8",
       "sudo apt update",
       "sudo apt upgrade -y",
       "sudo apt install -y python language-pack-en"

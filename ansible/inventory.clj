@@ -67,6 +67,7 @@
   ;; this will be used when the nomad config is being set up
   ;; so the nomad workers knows who their masters are
   (yinv/add-group $ "worker-nodes" {"master_nodes_internal_dns" master-nodes-pvt})
+  (yinv/add-group $ "master-nodes" {"master_nodes_internal_dns" master-nodes-pvt})
 
   ;; add master nodes
   (->> (for [x master-nodes]

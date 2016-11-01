@@ -90,7 +90,7 @@
   (conch/with-programs [terraform]
     (diag-lines (terraform "apply"
                            {:seq true
-                            :throw true
+                            :throw false
                             :verbose false
                             :dir (clojure.java.io/file work-dir "terraform")}))
     (ok! ok "terraform-apply-done")

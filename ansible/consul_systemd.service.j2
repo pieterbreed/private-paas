@@ -3,17 +3,11 @@ Description=consul
 Documentation=https://consul.io/docs/
 
 [Service]
-ExecStart=/usr/local/bin/consul agent \
-  -advertise={{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }} \
-  -bind=0.0.0.0 \
-  -bootstrap-expect=3 \
-  -client=0.0.0.0 \
-  -data-dir=/var/lib/consul \
-  -server \
-  -ui
+ExecStart=/usr/local/bin/consul agent -config-file=/etc/consul/server.hcl -data-dir=/var/lib/consul
   
 ExecReload=/bin/kill -HUP $MAINPID
 LimitNOFILE=65536
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
