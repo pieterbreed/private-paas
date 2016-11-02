@@ -17,10 +17,8 @@ resource "aws_instance" "cluster_master_node" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo apt-get install language-pack-UTF-8",
-      "sudo apt update",
-      "sudo apt upgrade -y",
-      "sudo apt install -y python language-pack-en"
-    ]    
+      "timeout 180 /bin/bash -c 'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting ...; sleep 1; done'",
+      "sudo apt update && sudo apt install -y language-pack-en python"
+    ]
   }  
 }

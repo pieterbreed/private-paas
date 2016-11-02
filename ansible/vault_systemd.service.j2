@@ -8,6 +8,8 @@ ExecStart=/usr/local/bin/vault server \
   
 ExecReload=/bin/kill -HUP $MAINPID
 LimitNOFILE=65536
+Restart=always
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target

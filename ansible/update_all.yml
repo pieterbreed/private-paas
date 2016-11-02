@@ -1,0 +1,32 @@
+---
+- hosts: all
+  tasks:
+    - name: Check if there are packages available to be installed/upgraded
+      become: true
+      command: /usr/lib/update-notifier/apt-check --package-names
+      register: packages
+      
+    - name: Upgrade all packages to the latest version
+      become: true
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: packages.stderr != ""
+      
+    - name: Check if a reboot is required
+      stat:
+        path: /var/run/reboot-required
+        get_md5: no
+      register: file
+      
+    - name: Reboot the server
+      become: true
+      command: /sbin/reboot
+      async: 0
+      poll: 0
+      ignore_errors: true
+      when: file.stat.exists == true
+
+    - name: waiting for server to come back
+      local_action:  wait_for host="{{ inventory_hostname }}" state=started
+
