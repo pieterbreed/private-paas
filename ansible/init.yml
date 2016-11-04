@@ -1,7 +1,8 @@
 ---
 - include: update_all.yml
+- include: deploy_java.yml
 - include: provision_master.yml
 - include: provision_worker.yml
-- include: deploy_java.yml
+
   
   
