@@ -11,27 +11,26 @@ job "birch-novel" {
     count = 3
 
     task "birch-novel" {
-      driver = "exec"
+      driver = "java"
       config {
-        command = "hashiapp"
+      	     jar_path = "local/birch-novel-0.2.3-standalone.jar"
+	     args = ["-u", "datomic:mem://test", "daemon"]
       }
 
       env {
-        VAULT_TOKEN = ""
-        VAULT_ADDR = "http://vault.service.consul:8200"
-        HASHIAPP_DB_HOST = ""
+        METRICS_PORT = "${NOMAD_PORT_http}"
       }
 
       artifact {
-        source = "https://storage.googleapis.com/hashistack/hashiapp/v1.0.0/hashiapp"
+        source = "https://pieterbreed.keybase.pub/birch-novel-0.2.3-standalone.jar"
         options {
-          checksum = "sha256:d2127dd0356241819e4db5407284a6d100d800ebbf37b4b2b8e9aefc97f48636"
+          checksum = "sha256:2a24160e0341715e8e2366f7dfe580b36073739836cc942365382f2b6d26cb77"
         }
       }
 
       resources {
         cpu = 500
-        memory = 64
+        memory = 512
         network {
           mbits = 1
           port "http" {}
@@ -39,15 +38,15 @@ job "birch-novel" {
       }
 
       service {
-        name = "hashiapp"
-        tags = ["urlprefix-hashiapp.com/"]
+        name = "birch-novel"
+        tags = ["urlprefix-/birch-novel"]
         port = "http"
         check {
           type = "http"
-          name = "healthz"
+          name = "birch-novel"
           interval = "15s"
           timeout = "5s"
-          path = "/healthz"
+          path = "/"
         }
       }
     }
