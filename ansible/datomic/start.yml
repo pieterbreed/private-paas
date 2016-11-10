@@ -1,0 +1,15 @@
+---
+- hosts: datomic-transactors
+  tasks:
+    - name: Restart datomic
+      become: yes
+      service:
+        name: datomic
+        state: started
+      
+    - name: Restart datomic console
+      become: yes
+      service:
+        name: datomicconsole
+        state: started
+      

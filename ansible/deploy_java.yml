@@ -1,5 +1,5 @@
 ---
-- hosts: worker-nodes
+- hosts: java-nodes
   vars:
     apt_cache_valid_time: 3600
   roles:

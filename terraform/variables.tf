@@ -19,6 +19,14 @@ variable ssh_username {
   default = "ubuntu"
 }
 
+variable datomic_nodes_count {
+  default = 2  
+}
+
+variable datomic_instance_type {
+  default = "t2.micro"
+}
+
 variable master_nodes_count {
   default = 5
 }

@@ -54,6 +54,7 @@
           (-> data k :value))]
   (def worker-nodes (get :worker-nodes-public))
   (def master-nodes (get :master-nodes-public))
+  (def datomic-nodes (get :datomic-nodes-public))
   (def master-nodes-pvt (get :master-nodes-private)))
 
 ;; ----------------------------------------
@@ -68,6 +69,20 @@
   ;; so the nomad workers knows who their masters are
   (yinv/add-group $ "worker-nodes" {"master_nodes_internal_dns" master-nodes-pvt})
   (yinv/add-group $ "master-nodes" {"master_nodes_internal_dns" master-nodes-pvt})
+  (yinv/add-group $ "datomic-nodes"
+                  {"datomic_transactor_properties"
+                   {"protocol" "ddb"
+                    "host" "0.0.0.0"
+                    "alt-host" "datomic.service.consul"
+                    "port" "4334"
+                    "license-key" "BAD_LICENSE_KEY"
+                    "memory-index-threshold" "32m"
+                    "memory-index-max" "256m"
+                    "object-cache-max" "128m"
+                    "data-dir" "/var/lib/datomic"
+                    "log-dir" "/var/log/datomic"
+                    "pid-file" "/var/run/datomic/datomic_transactor.pid"}}
+                  )
 
   ;; add master nodes
   (->> (for [x master-nodes]
@@ -92,7 +107,24 @@
                                       (:host x)
                                       (:vars x))
                      (yinv/add-target-to-group (:host x)
-                                               "worker-nodes")))
+                                               "worker-nodes")
+                     (yinv/add-target-to-group (:host x)
+                                               "java-nodes")))
+               $))
+  
+  ;; add datomic nodes
+  (->> (for [x datomic-nodes]
+         {:host ["ubuntu" x 22]
+          :vars {"ansible_user" "ubuntu"
+                 "ansible_host" x}})
+       (reduce (fn [acc x]
+                 (-> (yinv/add-target acc
+                                      (:host x)
+                                      (:vars x))
+                     (yinv/add-target-to-group (:host x)
+                                               "datomic-nodes")
+                     (yinv/add-target-to-group (:host x)
+                                               "java-nodes")))
                $))
   
 

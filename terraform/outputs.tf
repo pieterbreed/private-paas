@@ -13,3 +13,11 @@ output "master_nodes_private" {
 output "worker_nodes_private" {
   value = ["${aws_instance.cluster_worker_node.*.private_dns}"]
 }
+
+output "datomic_nodes_private" {
+  value = ["${aws_instance.datomic_node.*.private_dns}"]
+}
+
+output "datomic_nodes_public" {
+  value = ["${aws_instance.datomic_node.*.public_dns}"]
+}
