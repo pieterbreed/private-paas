@@ -1,0 +1,75 @@
+---
+- hosts: static-consul-nodes
+  tasks:
+    - name: Install base packages
+      become: true
+      apt:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - 'dnsmasq'
+        - 'unzip'
+
+    - name: Download and install hashicorp tools
+      become: true
+      unarchive:
+        src: "{{ item.url }}"
+        dest: "/usr/local/bin"
+        copy: no
+        creates: "{{ item.creates }}"
+      with_items:
+        - url: "https://releases.hashicorp.com/consul/0.7.0/consul_0.7.0_linux_amd64.zip"
+          creates: "/usr/local/bin/consul"
+
+    - name: Creating folders
+      become: true
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - "/etc/consul"
+        - "/etc/dnsmasq.d"
+        - "/var/lib/consul"
+
+    - name: dnsmasq config
+      become: true
+      template:
+        src: "dnsmasq_config.j2"
+        dest: "/etc/dnsmasq.d/10-consul"
+      notify:
+        - restart dnsmasq
+
+    - name: consul client config
+      become: true
+      template:
+        src: "consul_static_client.json.j2"
+        dest: "/etc/consul/server.hcl"
+      notify:
+        - restart consul
+
+    - name: Consul Systemd
+      become: true
+      template:
+        src: "consul_systemd.service.j2"
+        dest: "/etc/systemd/system/consul.service"
+      notify:
+        - Reload systemd
+        - restart consul
+
+  handlers:
+    - name: Reload systemd
+      become: yes
+      command: '/bin/systemctl daemon-reload'
+
+    - name: restart dnsmasq
+      become: yes
+      service:
+        name: dnsmasq
+        state: restarted
+      
+    - name: restart consul
+      become: yes
+      service:
+        name: consul
+        state: restarted
+        

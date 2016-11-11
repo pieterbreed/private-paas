@@ -69,6 +69,7 @@
   ;; so the nomad workers knows who their masters are
   (yinv/add-group $ "worker-nodes" {"master_nodes_internal_dns" master-nodes-pvt})
   (yinv/add-group $ "master-nodes" {"master_nodes_internal_dns" master-nodes-pvt})
+  (yinv/add-group $ "static-consul-nodes" {"master_nodes_internal_dns" master-nodes-pvt})
   (yinv/add-group $ "datomic-nodes"
                   {"datomic_transactor_properties"
                    {"protocol" "ddb"
@@ -124,7 +125,9 @@
                      (yinv/add-target-to-group (:host x)
                                                "datomic-nodes")
                      (yinv/add-target-to-group (:host x)
-                                               "java-nodes")))
+                                               "java-nodes")
+                     (yinv/add-target-to-group (:host x)
+                                               "static-consul-nodes")))
                $))
   
 
