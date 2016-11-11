@@ -1,0 +1,46 @@
+---
+- hosts: docker-nodes
+  tasks:
+    - name: Install prerequisites
+      become: true
+      apt:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - "apt-transport-https"
+        - "ca-certificates"
+
+    - name: Install docker GPG key
+      become: true
+      apt_key:
+        keyserver: p80.pool.sks-keyservers.net
+        id: 58118E89F3A912897C070ADBF76221572C52609D
+
+    - name: Install docker apt repository
+      become: true
+      apt_repository:
+        repo: 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
+        state: present
+
+    - name: Update APT cache and install extras
+      become: true
+      apt:
+        update_cache: yes
+        name: linux-image-extra-virtual
+        state: latest
+
+    - name: Install docker-engine
+      become: true
+      apt:
+        update_cache: no
+        name: docker-engine
+        state: installed
+
+    - name: Ensure docker is running
+      become: true
+      service:
+        name: docker
+        state: started
+        
+
+
