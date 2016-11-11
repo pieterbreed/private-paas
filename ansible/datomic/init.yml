@@ -18,7 +18,7 @@
     datomic_console_pid_file: '{{ datomic_pid_path }}/datomic_console.pid'
     datomic_systemd_service_file: '/etc/systemd/system/datomic.service'
     datomic_console_systemd_service_file: '/etc/systemd/system/datomicconsole.service'
-    datomic_console_hostname: "datomic.service.consul"
+    datomic_console_hostname: "{{ ansible_hostname }}"
 
   tasks:
     - name: Install required packages
@@ -27,17 +27,8 @@
         name: "{{ item }}"
         state: installed
       with_items:
-        - 'dnsmasq'
         - 'unzip'
 
-    - name: dnsmasq config
-      become: true
-      template:
-        src: "../dnsmasq_config.j2"
-        dest: "/etc/dnsmasq.d/10-consul"
-      notify:
-        - Restart dnsmasq
-        
     - name: Set up the service account
       become: true
       user:
@@ -92,12 +83,16 @@
         src: '{{ datomic_extract_path }}/{{ datomic_name_part }}'
         dest: '{{ datomic_current_path }}'
         state: link
+      notify:
+        - restart datomic
 
     - name: Configure the transactor
       become: yes
       template:
         src: 'java.properties.j2'
         dest: '{{ datomic_config_file }}'
+      notify:
+        - restart datomic
 
     - name: Configure the datomic system service
       become: yes
@@ -106,6 +101,7 @@
         dest: '{{ datomic_systemd_service_file }}'
       notify:
         - Reload systemd
+        - restart datomic
 
     - name: Configure the datomic console web app
       become: yes
@@ -114,15 +110,20 @@
         dest: '{{ datomic_console_systemd_service_file }}'
       notify:
         - Reload systemd
+        - restart datomic
 
   handlers:
     - name: Reload systemd
       become: yes
       command: '/bin/systemctl daemon-reload'
 
-    - name: Restart dnsmasq
+    - name: restart datomic
       become: yes
       service:
-        name: dnsmasq
+        name: "{{ item }}"
         state: restarted
-      
+      with_items:
+        - datomic
+        - datomicconsole
+          
+

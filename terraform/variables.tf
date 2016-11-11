@@ -20,18 +20,17 @@ variable ssh_username {
 }
 
 variable datomic_nodes_count {
-  default = 2  
+  default = 1
 }
 
 variable datomic_instance_type {
-  default = "t2.micro"
+  default = "t2.medium"
 }
 
 variable master_nodes_count {
   default = 5
 }
 variable master_instance_type {
-  //  default = "t2.micro"
   default = "t2.medium"
 }
 
@@ -39,6 +38,5 @@ variable worker_nodes_count {
   default = 5
 }
 variable worker_instance_type {
-  //  default = "t2.micro"
   default = "t2.medium"
 }
