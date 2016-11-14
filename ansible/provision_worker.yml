@@ -29,38 +29,35 @@
       with_items:
         - "/var/lib/nomad"
         - "/etc/nomad"
-        - "/etc/dnsmasq.d"
-
-    - name: Nomad config
-      become: true
-      template:
-        src: "nomad_worker.hcl.j2"
-        dest: "/etc/nomad/server.hcl"
 
     - name: Nomad Systemd
       become: true
       template:
         src: "nomad_systemd.service.j2"
         dest: "/etc/systemd/system/nomad.service"
+      notify:
+        - reload systemd
+        - restart nomad
 
-    - name: dnsmasq config
+    - name: Nomad config
       become: true
       template:
-        src: "dnsmasq_config.j2"
-        dest: "/etc/dnsmasq.d/10-consul"
+        src: "nomad_worker.hcl.j2"
+        dest: "/etc/nomad/server.hcl"
+      notify:
+        - restart nomad
 
+  handlers:
     - name: reload systemd
       become: true
       shell: "systemctl daemon-reload"
 
-    - name: Restart all the new services
+    - name: restart nomad
       become: true
       service:
         state: restarted
         enabled: yes
-        name: "{{ item }}"
-      with_items:
-        - "nomad"
-        - "dnsmasq"
+        name: nomad
+
 
         

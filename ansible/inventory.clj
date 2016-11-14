@@ -112,7 +112,9 @@
                      (yinv/add-target-to-group (:host x)
                                                "java-nodes")
                      (yinv/add-target-to-group (:host x)
-                                               "docker-nodes")))
+                                               "docker-nodes")
+                     (yinv/add-target-to-group (:host x)
+                                               "static-consul-nodes")))
                $))
   
   ;; add datomic nodes
