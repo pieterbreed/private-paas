@@ -1,8 +1,12 @@
 tickTime=2000
-dataDir=/var/lib/zookeeper/
+dataDir=/data/
 clientPort=2181
 initLimit=5
 syncLimit=2
 {% for host in groups['static-zookeeper-nodes'] %}
+{% if host == inventory_hostname %}
+server.{{ hostvars[host]['zookeeper_node_id'] }}=0.0.0.0:2888:3888
+{% else %}
 server.{{ hostvars[host]['zookeeper_node_id'] }}={{ hostvars[host]['ansible_hostname'] }}:2888:3888
+{% endif %}
 {% endfor %}
