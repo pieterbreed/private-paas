@@ -1,0 +1,23 @@
+---
+- hosts: static-zookeeper-nodes
+  tasks:
+    - name: Create config folder
+      become: true
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - "/etc/zookeeper"
+        - "/var/lib/zookeeper"
+
+    - name: Create ZooKeeper config file
+      become: true
+      template:
+        src: zoo.cfg.j2
+        dest: "/etc/zookeeper/zoo.cfg"
+
+    - name: Create ZooKeeper ID file
+      become: true
+      template:
+        src: zoo.id.j2
+        dest: "/var/lib/zookeeper/id"

@@ -99,23 +99,29 @@
                $))
 
   ;; add worker nodes
-  (->> (for [x worker-nodes]
-         {:host ["ubuntu" x 22]
-          :vars {"ansible_user" "ubuntu"
-                 "ansible_host" x}})
-       (reduce (fn [acc x]
-                 (-> (yinv/add-target acc
-                                      (:host x)
-                                      (:vars x))
-                     (yinv/add-target-to-group (:host x)
-                                               "worker-nodes")
-                     (yinv/add-target-to-group (:host x)
-                                               "java-nodes")
-                     (yinv/add-target-to-group (:host x)
-                                               "docker-nodes")
-                     (yinv/add-target-to-group (:host x)
-                                               "static-consul-nodes")))
-               $))
+  (let [counter (atom 0)]
+    (->> (for [x worker-nodes]
+           {:host ["ubuntu" x 22]
+            :vars {"ansible_user" "ubuntu"
+                   "ansible_host" x
+                   "zookeeper_node_id" (swap! counter inc)}})
+         (reduce (fn [acc x]
+                   (-> (yinv/add-target acc
+                                        (:host x)
+                                        (:vars x))
+                       (yinv/add-target-to-group (:host x)
+                                                 "worker-nodes")
+                       (yinv/add-target-to-group (:host x)
+                                                 "java-nodes")
+                       (yinv/add-target-to-group (:host x)
+                                                 "docker-nodes")
+                       (yinv/add-target-to-group (:host x)
+                                                 "static-consul-nodes")
+                       (yinv/add-target-to-group (:host x)
+                                                 "static-zookeeper-nodes")
+
+                       ))
+                 $)))
   
   ;; add datomic nodes
   (->> (for [x datomic-nodes]
