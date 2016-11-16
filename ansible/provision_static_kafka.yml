@@ -1,0 +1,49 @@
+---
+- hosts: static-zookeeper-nodes
+  tasks:
+    - name: Install pip for python
+      become: true
+      apt:
+        name: python-pip
+        state: present
+        
+    - name: Install docker-py
+      become: true
+      pip: name=docker-py
+    
+    - name: Create kafka folders
+      become: true
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - "/etc/kafka"
+        - "/var/lib/kafka"
+
+    - name: Create kafka config file
+      become: true
+      template:
+        src: kafka_server.properties.j2
+        dest: "/etc/kafka/server.properties"
+
+    - name: Pull the kafka docker image
+      become: true
+      docker_image:
+        name: "pieterbreed/kafka"
+
+    - name: Start the kafka docker container
+      become: true
+      docker_container:
+        name: "kafka"
+        image: "pieterbreed/kafka"
+        state: started
+        restart: yes
+        dns_servers:
+          - "{{ ansible_eth0['ipv4']['address'] }}"
+        published_ports:
+          - "9092:9092"
+        volumes:
+          - "/etc/kafka/server.properties:/conf/server.properties"
+          - "/var/lib/kafka:/data"
+        
+         
