@@ -1,5 +1,5 @@
 resource "aws_security_group" "consul" {
-  name = "Hashistack"
+  name = "${var.environment_name} - Hashistack"
   description = "Consul internal traffic + maintenance."
 
   // These are for internal traffic
