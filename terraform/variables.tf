@@ -3,6 +3,10 @@ variable "secret_key" {}
 variable "key_name" {}
 variable "key_path" {}
 
+variable "tld" {
+  default = "hs.zoona.io"
+}
+
 variable "environment_name" {}
 
 variable "region" {
@@ -22,7 +26,7 @@ variable ssh_username {
 }
 
 variable datomic_nodes_count {
-  default = 0
+  default = 1
 }
 
 variable datomic_instance_type {
@@ -37,7 +41,7 @@ variable master_instance_type {
 }
 
 variable worker_nodes_count {
-  default = 2
+  default = 3
 }
 variable worker_instance_type {
   default = "t2.medium"

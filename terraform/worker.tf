@@ -12,7 +12,7 @@ resource "aws_instance" "cluster_worker_node" {
   }  
   
   tags {
-    Name = "${var.environment_name} - Worker Node - ${count.index + 1} / ${var.worker_nodes_count}"
+    Name = "${var.environment_name}.${var.tld} - Worker Node - ${count.index + 1} / ${var.worker_nodes_count}"
   }
   
   provisioner "remote-exec" {
