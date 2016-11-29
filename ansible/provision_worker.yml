@@ -9,6 +9,7 @@
       with_items:
         - 'dnsmasq'
         - 'unzip'
+        - 'letsencrypt'
 
     - name: Download and install hashicorp tools
       become: true
@@ -18,7 +19,7 @@
         copy: no
         creates: "{{ item.creates }}"
       with_items:
-        - url: "https://releases.hashicorp.com/nomad/0.4.1/nomad_0.4.1_linux_amd64.zip"
+        - url: "https://releases.hashicorp.com/nomad/0.5.0/nomad_0.5.0_linux_amd64.zip"
           creates: "/usr/local/bin/nomad"
 
     - name: Creating folders

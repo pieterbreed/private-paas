@@ -1,6 +1,6 @@
 # Create a new load balancer
 resource "aws_elb" "fabio" {
-  name = "${var.tld}-fabio"
+  
   availability_zones = ["${var.region}b", "${var.region}c", "${var.region}d", "${var.region}e"]
   security_groups = ["${aws_security_group.std.id}", "${aws_security_group.incoming_http.id}"]
 

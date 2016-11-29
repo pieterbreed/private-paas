@@ -1,5 +1,8 @@
 ---
 - hosts: master-nodes
+  vars:
+    env_name: "{{ lookup('env', 'TF_VAR_environment_name') }}"
+    tld: "{{ lookup('env', 'TF_VAR_tld') }}"
   tasks:
     - name: Install base packages
       become: true
@@ -18,7 +21,7 @@
         copy: no
         creates: "{{ item.creates }}"
       with_items: 
-        - url: "https://releases.hashicorp.com/nomad/0.4.1/nomad_0.4.1_linux_amd64.zip"
+        - url: "https://releases.hashicorp.com/nomad/0.5.0/nomad_0.5.0_linux_amd64.zip"
           creates: "/usr/local/bin/nomad"
         - url: "https://releases.hashicorp.com/consul/0.7.1/consul_0.7.1_linux_amd64.zip"
           creates: "/usr/local/bin/consul"

@@ -3,7 +3,7 @@ Description=consul
 Documentation=https://consul.io/docs/
 
 [Service]
-ExecStart=/usr/local/bin/consul agent -config-file=/etc/consul/server.hcl -data-dir=/var/lib/consul
+ExecStart=/usr/local/bin/consul agent -config-file=/etc/consul/server.hcl -data-dir=/var/lib/consul 
   
 ExecReload=/bin/kill -HUP $MAINPID
 LimitNOFILE=65536
