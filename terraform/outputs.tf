@@ -21,3 +21,7 @@ output "datomic_nodes_private" {
 output "datomic_nodes_public" {
   value = ["${aws_instance.datomic_node.*.public_dns}"]
 }
+
+output "elb_fabio" {
+  value = ["${aws_elb.fabio.dns_name}"]
+}
