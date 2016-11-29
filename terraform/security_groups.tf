@@ -1,5 +1,5 @@
 resource "aws_security_group" "std" {
-  name = "${var.environment_name}.${var.tld}-std"
+  name = "${var.tld}-std"
   description = "Open Internal Traffic + Maintenance."
 
   // These are for internal traffic
@@ -35,10 +35,10 @@ resource "aws_security_group" "std" {
 }
 
 resource "aws_security_group" "incoming_http" {
-  name = "${var.environment_name}.${var.tld}-http"
+  name = "${var.tld}-http"
   description = "Incoming HTTP"
 
- // These are for maintenance
+  // These are for maintenance
   ingress {
     from_port = 80
     to_port = 80

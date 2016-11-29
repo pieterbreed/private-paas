@@ -12,7 +12,7 @@ resource "aws_instance" "cluster_master_node" {
   }  
   
   tags {
-    Name = "${var.environment_name}.${var.tld} - Master Node - ${count.index + 1} / ${var.master_nodes_count}"
+    Name = "${var.tld} - Master Node - ${count.index + 1} / ${var.master_nodes_count}"
   }
 
   provisioner "remote-exec" {

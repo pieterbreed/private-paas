@@ -1,14 +1,8 @@
 # Create a new load balancer
 resource "aws_elb" "fabio" {
-  name = "${var.environment_name}"
+  name = "${var.tld}-fabio"
   availability_zones = ["${var.region}b", "${var.region}c", "${var.region}d", "${var.region}e"]
   security_groups = ["${aws_security_group.std.id}", "${aws_security_group.incoming_http.id}"]
-
-  # access_logs {
-  #   bucket = "pieter-logs"
-  #   bucket_prefix = "${var.environment_name}.${var.tld}"
-  #   interval = 60
-  # }
 
   listener {
     instance_port = 9999
@@ -40,6 +34,6 @@ resource "aws_elb" "fabio" {
   connection_draining_timeout = 400
 
   tags {
-    Name = "${var.environment_name}.${var.tld} ELB 2 fabio on workers"
+    Name = "${var.tld} ELB 2 fabio on workers"
   }
 }

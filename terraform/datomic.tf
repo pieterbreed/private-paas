@@ -12,7 +12,7 @@ resource "aws_instance" "datomic_node" {
   }  
   
   tags {
-    Name = "${var.environment_name}.${var.tld} - Datomic Transactor - ${count.index + 1} / ${var.datomic_nodes_count}"
+    Name = "${var.tld} - Datomic Transactor - ${count.index + 1} / ${var.datomic_nodes_count}"
   }
 
   provisioner "remote-exec" {

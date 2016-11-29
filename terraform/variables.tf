@@ -3,7 +3,6 @@ variable "secret_key" {}
 variable "key_name" {}
 variable "key_path" {}
 variable "tld" {}
-variable "environment_name" {}
 
 variable "region" {
   default = "us-east-1"
