@@ -2,11 +2,7 @@ variable "access_key" {}
 variable "secret_key" {}
 variable "key_name" {}
 variable "key_path" {}
-
-variable "tld" {
-  default = "hs.zoona.io"
-}
-
+variable "tld" {}
 variable "environment_name" {}
 
 variable "region" {
@@ -16,8 +12,7 @@ variable "region" {
 variable "amis" {
   type = "map"
   default = {
-    us-east-1 = "ami-13be557e"
-    us-west-2 = "ami-06b94666"
+    us-east-1 = "ami-13be557e"    
   }
 }
 
@@ -26,7 +21,7 @@ variable ssh_username {
 }
 
 variable datomic_nodes_count {
-  default = 1
+  default = 0
 }
 
 variable datomic_instance_type {
