@@ -34,14 +34,22 @@ resource "aws_security_group" "std" {
   }
 }
 
-resource "aws_security_group" "incoming_http" {
-  name = "${var.tld}-http"
+resource "aws_security_group" "incoming_lb" {
+  name = "${var.tld}-lb"
   description = "Incoming HTTP"
 
-  // These are for maintenance
+  // naked http
   ingress {
     from_port = 80
     to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // https
+  ingress {
+    from_port = 443
+    to_port = 443
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

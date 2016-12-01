@@ -2,7 +2,7 @@
 resource "aws_elb" "fabio" {
   
   availability_zones = ["${var.region}b", "${var.region}c", "${var.region}d", "${var.region}e"]
-  security_groups = ["${aws_security_group.std.id}", "${aws_security_group.incoming_http.id}"]
+  security_groups = ["${aws_security_group.std.id}", "${aws_security_group.incoming_lb.id}"]
 
   listener {
     instance_port = 9999

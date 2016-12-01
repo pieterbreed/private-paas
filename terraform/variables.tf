@@ -20,7 +20,7 @@ variable ssh_username {
 }
 
 variable datomic_nodes_count {
-  default = 0
+  default = 1
 }
 
 variable datomic_instance_type {
