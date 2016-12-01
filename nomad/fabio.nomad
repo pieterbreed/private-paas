@@ -15,6 +15,7 @@ job "fabio" {
 	FABIO_PROXY_ADDR = ":${NOMAD_PORT_http}"
 	FABIO_UI_ADDR = ":${NOMAD_PORT_ui}"
 	FABIO_REGISTRY_CONSUL_TAGPREFIX = "http-urlprefix-"
+	FABIO_REGISTRY_CONSUL_KVPATH = "/fabio/http-config"
 
       }
       config {
@@ -52,6 +53,7 @@ job "fabio" {
 	FABIO_UI_ADDR = ":${NOMAD_PORT_ui}"
 	FABIO_REGISTRY_CONSUL_TAGPREFIX = "https-urlprefix-"
 	FABIO_PROXY_CS = "cs=sslcerts;type=consul;cert=http://localhost:8500/v1/kv/sslcerts"
+	FABIO_REGISTRY_CONSUL_KVPATH = "/fabio/https-config"
       }
       config {
 	command = "fabio-1.3.5-go1.7.3-linux_amd64"
