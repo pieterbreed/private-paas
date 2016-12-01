@@ -1,5 +1,5 @@
-resource "aws_security_group" "std" {
-  name = "${var.tld}-std"
+resource "aws_security_group" "cluster" {
+  name = "${var.tld}-cluster"
   description = "Open Internal Traffic + Maintenance."
 
   // These are for internal traffic
@@ -34,7 +34,7 @@ resource "aws_security_group" "std" {
   }
 }
 
-resource "aws_security_group" "incoming_lb" {
+resource "aws_security_group" "lb" {
   name = "${var.tld}-lb"
   description = "Incoming HTTP"
 

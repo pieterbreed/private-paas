@@ -1,7 +1,7 @@
 resource "aws_instance" "cluster_master_node" {
   ami = "${lookup(var.amis, var.region)}"
   key_name = "${var.key_name}"
-  security_groups = ["${aws_security_group.std.name}"]
+  security_groups = ["${aws_security_group.cluster.name}"]
   
   count = "${var.master_nodes_count}"
   instance_type = "${var.master_instance_type}"

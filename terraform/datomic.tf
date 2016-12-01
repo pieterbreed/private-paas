@@ -1,7 +1,7 @@
 resource "aws_instance" "datomic_node" {
   ami = "${lookup(var.amis, var.region)}"
   key_name = "${var.key_name}"
-  security_groups = ["${aws_security_group.std.name}"]
+  security_groups = ["${aws_security_group.cluster.name}"]
   
   count = "${var.datomic_nodes_count}"
   instance_type = "${var.datomic_instance_type}"
