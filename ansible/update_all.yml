@@ -5,6 +5,14 @@
       become: true
       command: /usr/lib/update-notifier/apt-check --package-names
       register: packages
+
+    - name: Fix the F8kc1ng LOCALE error
+      become: true
+      lineinfile:
+        dest: "/etc/environment"
+        line: 'LC_ALL="en_US.UTF-8"'
+        state: present
+      register: locale
       
     - name: Upgrade all packages to the latest version
       become: true
@@ -25,7 +33,7 @@
       async: 0
       poll: 0
       ignore_errors: true
-      when: file.stat.exists == true
+      when: file.stat.exists == true or locale.changed
 
     - name: waiting for server to come back
       local_action:  wait_for host="{{ inventory_hostname }}" state=started

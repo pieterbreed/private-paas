@@ -4,8 +4,11 @@
 - include: provision_master.yml
 - include: provision_worker.yml
 - include: provision_static_consul.yml
-# - include: datomic/init.yml
+- include: datomic/init.yml
 - include: deploy_docker.yml
+- include: provision_static_zookeeper.yml
+- include: provision_static_kafka.yml
+- include: update_all.yml
 
 
   
