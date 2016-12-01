@@ -13,7 +13,7 @@ job "fabio" {
       env {
 	FABIO_REGISTRY_CONSUL_REGISTER_ADDR = ":${NOMAD_PORT_ui}"
 	FABIO_PROXY_ADDR = ":${NOMAD_PORT_http}"
-	FABIO_UI_ADDR = ":${NOMAD_PORT_id}"
+	FABIO_UI_ADDR = ":${NOMAD_PORT_ui}"
 	FABIO_REGISTRY_CONSUL_TAGPREFIX = "http-urlprefix-"
 
       }
@@ -49,7 +49,7 @@ job "fabio" {
       env {
 	FABIO_REGISTRY_CONSUL_REGISTER_ADDR = ":${NOMAD_PORT_ui}"
 	FABIO_PROXY_ADDR = ":${NOMAD_PORT_http};cs=sslcerts"
-	FABIO_UI_ADDR = ":${NOMAD_PORT_id}"
+	FABIO_UI_ADDR = ":${NOMAD_PORT_ui}"
 	FABIO_REGISTRY_CONSUL_TAGPREFIX = "https-urlprefix-"
 	FABIO_PROXY_CS = "cs=sslcerts;type=consul;cert=http://localhost:8500/v1/kv/sslcerts"
       }
