@@ -35,10 +35,10 @@ job "fabio" {
 	  mbits = 1
 
 	  port "http" {
-	    static = 9991
+	    static = 9993
 	  }
 	  port "ui" {
-	    static = 9990
+	    static = 9992
 	  }
 	}
       }
@@ -71,10 +71,10 @@ job "fabio" {
 	  mbits = 1
 
 	  port "http" {
-	    static = 9993
+	    static = 9991
 	  }
 	  port "ui" {
-	    static = 9992
+	    static = 9990
 	  }
 	}
       }
