@@ -1,6 +1,6 @@
 resource "aws_security_group" "cluster" {
   name = "${var.tld}-cluster"
-  description = "Open Internal Traffic + Maintenance."
+  description = "Internal Open + External SSH."
 
   // These are for internal traffic
   ingress {
@@ -36,7 +36,7 @@ resource "aws_security_group" "cluster" {
 
 resource "aws_security_group" "lb" {
   name = "${var.tld}-lb"
-  description = "Incoming HTTP"
+  description = "Incoming HTTP(S)"
 
   // naked http
   ingress {
