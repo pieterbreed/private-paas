@@ -25,3 +25,14 @@ resource "aws_route53_record" "vault" {
     evaluate_target_health = true
   }
 }
+
+resource "aws_route53_record" "gateway" {
+  zone_id = "${aws_route53_zone.top.zone_id}"
+  name = "gw.${var.tld}"
+  type = "A"
+  alias {
+    name = "${aws_elb.fabio.dns_name}"
+    zone_id = "${aws_elb.fabio.zone_id}"
+    evaluate_target_health = true
+  }
+}
