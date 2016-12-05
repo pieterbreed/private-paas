@@ -1,7 +1,6 @@
 ---
 - hosts: master-nodes
   vars:
-    env_name: "{{ lookup('env', 'TF_VAR_environment_name') }}"
     tld: "{{ lookup('env', 'TF_VAR_tld') }}"
   tasks:
     - name: Install base packages

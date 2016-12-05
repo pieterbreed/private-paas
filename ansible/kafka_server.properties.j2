@@ -2,3 +2,4 @@ broker.id={{ zookeeper_node_id }}
 zookeeper.connect={% for host in groups['static-zookeeper-nodes'] %}{{ hostvars[host]['ansible_hostname'] }}:2181,{% endfor %}
 
 log.dirs=/data
+advertised.listeners={{ ansible_hostname}}:9092
