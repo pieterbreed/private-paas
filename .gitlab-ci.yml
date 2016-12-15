@@ -1,4 +1,5 @@
 request_resources:
   script:
     - echo request resources
+    - tree
   
