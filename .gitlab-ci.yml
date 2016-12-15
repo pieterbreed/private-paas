@@ -1,4 +1,8 @@
-request_resources:
+stages:
+  - acquire_resources
+
+acquire_resources:
   script:
-    - echo request resources
+    - cd terraform
+    - terraform plan
   
