@@ -1,7 +1,8 @@
 stages:
   - acquire_resources
 
-acquire_resources:
+terraform_plan:
+  stage: acquire_resources
   script:
     - cd terraform
     - terraform plan
