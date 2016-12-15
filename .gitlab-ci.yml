@@ -1,0 +1,15 @@
+stages:
+  - request_resources
+
+before_script:
+  - echo before script
+
+end_script:
+  - echo end script
+    
+
+request_resources:
+  stage: request_resources
+  script:
+    - echo request resources
+  
